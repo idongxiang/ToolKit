@@ -54,8 +54,8 @@ func main() {
 		return
 	}
 
-	body, e := ioutil.ReadAll(res.Body)
 	defer res.Body.Close()
+	body, e := ioutil.ReadAll(res.Body)
 
 	if e != nil {
 		fmt.Println(e.Error())
