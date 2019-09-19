@@ -34,14 +34,14 @@ func requestBody(body SqlRequest) string {
 	return string(bytes)
 }
 
-func __main() {
+func main() {
 	log := SkyNetLog{
-		appid:        "skynet_all_101312",
+		appid:        "",
 		logtime:      "",
 		msg:          "",
 		extrainfo:    "",
-		module:       "",
-		category:     "",
+		module:       "com.xx.core",
+		category:     "api",
 		sub_category: "",
 		priority:     "",
 		ip:           "",
@@ -55,11 +55,11 @@ func __main() {
 
 	reg := RegexCondition{
 		regex:  "code\\\": \\\"(\\d)\\\"",
-		target: "1",
+		target: "0",
 	}
 
 	from := SelectFrom{
-		fields: []string{"logtime", "msg"},
+		fields: []string{"count(*)"},
 		table:  "skynet_all_101312",
 	}
 

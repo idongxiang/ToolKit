@@ -9,10 +9,10 @@ import (
 
 const QueryUrl string = "http://query"
 
-func main() {
+func __main() {
 	fmt.Println("Hello, 世界")
 	request := SkyNetLog{
-		appid:        "skynet_all_101312",
+		appid:        "",
 		logtime:      "",
 		msg:          "",
 		extrainfo:    "",
@@ -25,7 +25,7 @@ func main() {
 		filter2:      "",
 		contextid:    "",
 		domainname:   "",
-		dt:           "",
+		dt:           "20190919",
 		hour:         "",
 	}
 
