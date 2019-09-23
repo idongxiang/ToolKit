@@ -1,75 +1,13 @@
 package main
 
-import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-)
-
 const CasePath string = "okr/case/"
 
 func main() {
-	files, e := ioutil.ReadDir(CasePath)
-	if e != nil {
-		fmt.Println(e)
-		return
-	}
-
-	var cases []string
-	for _, f := range files {
-		if f.IsDir() {
-			continue
-		}
-		cases = append(cases, f.Name())
-	}
-
-	if len(cases) == 0 {
-		fmt.Println("no case files")
-		return
-	}
-
-	ch := make(chan string, len(cases))
-	for _, c := range cases {
-		chDoCase(CasePath+c, ch)
-	}
-
-	for i := 0; i < len(files); i++ {
-		fmt.Println(<-ch)
-	}
+	//doRealChCase(CasePath)
+	doLatestWeekCase(CasePath)
 }
 
-func chDoCase(file string, ch chan string) {
-	ch <- doCase(file)
-}
-
-func doCase(file string) string {
-	b, e := ioutil.ReadFile(file)
-	if e != nil {
-		fmt.Println(e)
-		return ""
-	}
-	request := SqlRequest{}
-	e = json.Unmarshal(b, &request)
-	if e != nil {
-		fmt.Println(e)
-		return ""
-	}
-	b, e = json.Marshal(request.Condition)
-	if e != nil {
-		fmt.Println(e)
-		return ""
-	}
-	log := SkyNetLog{}
-	e = json.Unmarshal(b, &log)
-	if e != nil {
-		fmt.Println(e)
-		return ""
-	}
-	request.Condition = log
-	return doSqlQuery(request)
-}
-
-func _main() {
+func _test() {
 	r := SqlRequest{}
 
 	s := Select{
