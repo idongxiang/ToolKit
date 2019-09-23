@@ -10,15 +10,15 @@ type RegexCondition struct {
 	Target string
 }
 
-type SelectFrom struct {
+type Select struct {
 	Fields []string
 	Table  string
 }
 
-func sql(from SelectFrom, condition interface{}, regex RegexCondition) string {
+func sql(s Select, condition interface{}, regex RegexCondition) string {
 	sql := strings.Builder{}
-	sql.WriteString(_select(from.Fields))
-	sql.WriteString(_from(from.Table))
+	sql.WriteString(_select(s.Fields))
+	sql.WriteString(_from(s.Table))
 	sql.WriteString(_where(condition, regex))
 	return sql.String()
 }
@@ -62,7 +62,7 @@ func _condition(condition interface{}) string {
 		}
 		if first {
 			handleWhere(fn, &statement)
-			if fn == LogDt {
+			if strings.EqualFold(fn, LogDt) {
 				handleIn(fv, &statement)
 			} else {
 				handleEq(fv, &statement)
@@ -70,7 +70,7 @@ func _condition(condition interface{}) string {
 			first = false
 		} else {
 			handleAnd(fn, &statement)
-			if fn == LogDt {
+			if strings.EqualFold(fn, LogDt) {
 				handleIn(fv, &statement)
 			} else {
 				handleEq(fv, &statement)
@@ -83,12 +83,12 @@ func _condition(condition interface{}) string {
 
 func handleWhere(f string, b *strings.Builder) {
 	b.WriteString(" where ")
-	b.WriteString(f)
+	b.WriteString(strings.ToLower(f))
 }
 
 func handleAnd(f string, b *strings.Builder) {
 	b.WriteString(" and ")
-	b.WriteString(f)
+	b.WriteString(strings.ToLower(f))
 }
 
 func handleIn(v string, b *strings.Builder) {

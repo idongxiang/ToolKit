@@ -14,7 +14,7 @@ type QueryRequest struct {
 }
 
 type SqlRequest struct {
-	From           SelectFrom
+	Select         Select
 	Condition      interface{}
 	RegexCondition RegexCondition
 }
@@ -28,7 +28,7 @@ func doSqlQuery(request SqlRequest) string {
 }
 
 func getSqlBody(body SqlRequest) string {
-	sql := sql(body.From, body.Condition, body.RegexCondition)
+	sql := sql(body.Select, body.Condition, body.RegexCondition)
 	request := QueryRequest{}
 	request.Query = sql
 
