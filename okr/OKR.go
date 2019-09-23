@@ -17,7 +17,10 @@ func main() {
 
 	ch := make(chan string, len(files))
 	for _, f := range files {
-		go chDoCase(CasePath+f.Name(), ch)
+		if f.IsDir() {
+			continue
+		}
+		chDoCase(CasePath+f.Name(), ch)
 	}
 
 	for i := 0; i < len(files); i++ {
