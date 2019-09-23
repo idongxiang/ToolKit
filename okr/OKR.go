@@ -15,12 +15,22 @@ func main() {
 		return
 	}
 
-	ch := make(chan string, len(files))
+	var cases []string
 	for _, f := range files {
 		if f.IsDir() {
 			continue
 		}
-		chDoCase(CasePath+f.Name(), ch)
+		cases = append(cases, f.Name())
+	}
+
+	if len(cases) == 0 {
+		fmt.Println("no case files")
+		return
+	}
+
+	ch := make(chan string, len(cases))
+	for _, c := range cases {
+		chDoCase(CasePath+c, ch)
 	}
 
 	for i := 0; i < len(files); i++ {
