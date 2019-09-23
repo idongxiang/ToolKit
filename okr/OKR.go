@@ -98,6 +98,7 @@ func _main() {
 	regexCondition := RegexCondition{}
 	regexCondition.Regex = ""
 	regexCondition.Target = ""
+	regexCondition.Operator = ""
 
 	r.Select = s
 	r.Condition = condition

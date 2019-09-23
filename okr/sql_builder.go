@@ -6,8 +6,9 @@ import (
 )
 
 type RegexCondition struct {
-	Regex  string
-	Target string
+	Regex    string
+	Target   string
+	Operator string
 }
 
 type Select struct {
@@ -109,7 +110,13 @@ func handleReg(reg RegexCondition, b *strings.Builder) {
 	}
 	b.WriteString(" and REGEXP_EXTRACT(msg, '")
 	b.WriteString(reg.Regex)
-	b.WriteString("', 1) = '")
+	b.WriteString("', 1) ")
+	if len(reg.Operator) > 0 {
+		b.WriteString(reg.Operator)
+	} else {
+		b.WriteString("=")
+	}
+	b.WriteString(" '")
 	b.WriteString(reg.Target)
 	b.WriteString("'")
 }
