@@ -1,0 +1,29 @@
+{
+  "select": {
+    "fields": [
+      "count(*)"
+    ],
+    "table": "skynet_all_101312"
+  },
+  "condition": {
+    "appid": "",
+    "logtime": "",
+    "msg": "",
+    "extrainfo": "",
+    "module": "com.ly.train.controller.valueadded",
+    "category": "RecommendController",
+    "sub_category": "availRecommend",
+    "priority": "",
+    "ip": "",
+    "filter1": "",
+    "filter2": "",
+    "contextid": "",
+    "domainname": "",
+    "dt": "20190924",
+    "hour": ""
+  },
+  "regexCondition": {
+    "regex": "",
+    "target": ""
+  }
+}
