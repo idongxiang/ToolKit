@@ -17,7 +17,8 @@ type Application struct {
 }
 
 type OkrConfig struct {
-	Sql struct {
+	Case string
+	Sql  struct {
 		Url            string
 		Authentication string
 	}
@@ -53,4 +54,5 @@ func init() {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println("OkrConfig.Case =" + config.Case)
 }
