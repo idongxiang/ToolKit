@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"strconv"
 	"time"
 )
 
@@ -109,11 +110,50 @@ func getLatestWeekCase(file string) []SqlRequest {
 
 	var requests []SqlRequest
 	for i := 0; i < 7; i++ {
-		t := &log
-		t.Dt = dt.AddDate(0, 0, -i).Format("20060102")
-		r := &request
-		r.Condition = *t
-		requests = append(requests, *r)
+		for j := 0; j < 24; j++ {
+			t := &log
+			dt := dt.AddDate(0, 0, -i)
+			t.Dt = dt.Format("20060102")
+			r := &request
+			r.Condition = *t
+
+			var lowerHour time.Duration
+			if j != 0 {
+				lowerHour, e = time.ParseDuration(strconv.Itoa(j) + "h")
+				if e != nil {
+					fmt.Println(e)
+					return nil
+				}
+			}
+
+			upperHour, e := time.ParseDuration(strconv.Itoa(j+1) + "h")
+			if e != nil {
+				fmt.Println(e)
+				return nil
+			}
+
+			var lowerLogTime string
+			if j == 0 {
+				lowerLogTime = dt.Format("2006-01-02 15:04:05")
+			} else {
+				lowerLogTime = dt.Add(lowerHour).Format("2006-01-02 15:04:05")
+			}
+			lower := RangeCondition{}
+			lower.Field = LogTime
+			lower.Operator = ">="
+			lower.Target = lowerLogTime
+
+			upperLogTime := dt.Add(upperHour).Format("2006-01-02 15:04:05")
+			upper := RangeCondition{}
+			upper.Field = LogTime
+			upper.Operator = "<"
+			upper.Target = upperLogTime
+
+			rcs := []RangeCondition{lower, upper}
+
+			r.RangeCondition = rcs
+			requests = append(requests, *r)
+		}
 	}
 
 	return requests

@@ -18,6 +18,7 @@ type SqlRequest struct {
 	Condition        interface{}
 	RegexCondition   RegexCondition
 	ExpressCondition ExpressCondition
+	RangeCondition   []RangeCondition
 }
 
 func doSqlQuery(request SqlRequest) string {
@@ -29,7 +30,7 @@ func doSqlQuery(request SqlRequest) string {
 }
 
 func getSqlBody(body SqlRequest) string {
-	sql := sql(body.Select, body.Condition, body.RegexCondition, body.ExpressCondition)
+	sql := sql(body.Select, body.Condition, body.RegexCondition, body.ExpressCondition, body.RangeCondition)
 	request := QueryRequest{}
 	request.Query = sql
 

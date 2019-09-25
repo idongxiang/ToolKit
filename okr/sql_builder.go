@@ -17,16 +17,22 @@ type ExpressCondition struct {
 	Operator string
 }
 
+type RangeCondition struct {
+	Field    string
+	Target   string
+	Operator string
+}
+
 type Select struct {
 	Fields []string
 	Table  string
 }
 
-func sql(s Select, condition interface{}, regex RegexCondition, express ExpressCondition) string {
+func sql(s Select, condition interface{}, regex RegexCondition, express ExpressCondition, rc []RangeCondition) string {
 	sql := strings.Builder{}
 	sql.WriteString(_select(s.Fields))
 	sql.WriteString(_from(s.Table))
-	sql.WriteString(_where(condition, regex, express))
+	sql.WriteString(_where(condition, regex, express, rc))
 	return sql.String()
 }
 
@@ -45,13 +51,14 @@ func _from(table string) string {
 	return " from " + table
 }
 
-func _where(condition interface{}, regex RegexCondition, express ExpressCondition) string {
+func _where(condition interface{}, regex RegexCondition, express ExpressCondition, rc []RangeCondition) string {
 	sql := strings.Builder{}
 	statement := _condition(condition)
 	if len(statement) == 0 {
 		return ""
 	}
 	sql.WriteString(statement)
+	handleRange(rc, &sql)
 	handleReg(regex, &sql)
 	handleExpress(express, &sql)
 	return sql.String()
@@ -70,7 +77,7 @@ func _condition(condition interface{}) string {
 		}
 		if first {
 			handleWhere(fn, &statement)
-			if strings.EqualFold(fn, LogDt) {
+			if skyNetIn(fn) {
 				handleIn(fv, &statement)
 			} else {
 				handleEq(fv, &statement)
@@ -78,7 +85,7 @@ func _condition(condition interface{}) string {
 			first = false
 		} else {
 			handleAnd(fn, &statement)
-			if strings.EqualFold(fn, LogDt) {
+			if skyNetIn(fn) {
 				handleIn(fv, &statement)
 			} else {
 				handleEq(fv, &statement)
@@ -137,9 +144,24 @@ func handleExpress(express ExpressCondition, b *strings.Builder) {
 	if len(express.Operator) > 0 {
 		b.WriteString(express.Operator)
 	} else {
-		b.WriteString("=")
+		b.WriteString(" =")
 	}
 	b.WriteString(" '")
 	b.WriteString(express.Target)
 	b.WriteString("'")
+}
+
+func handleRange(rc []RangeCondition, b *strings.Builder) {
+	if len(rc) == 0 {
+		return
+	}
+	for _, r := range rc {
+		b.WriteString(" and ")
+		b.WriteString(r.Field)
+		b.WriteString(" ")
+		b.WriteString(r.Operator)
+		b.WriteString(" '")
+		b.WriteString(r.Target)
+		b.WriteString("'")
+	}
 }

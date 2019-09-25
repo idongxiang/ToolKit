@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 type SkyNetLog struct {
 	Appid        string `json:"appid"`
 	Logtime      string `json:"logtime"`
@@ -19,3 +21,9 @@ type SkyNetLog struct {
 }
 
 const LogDt string = "dt"
+const LogHour string = "hour"
+const LogTime string = "logtime"
+
+func skyNetIn(field string) bool {
+	return strings.EqualFold(field, LogDt) || strings.EqualFold(field, LogHour)
+}
