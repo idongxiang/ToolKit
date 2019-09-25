@@ -11,16 +11,22 @@ type RegexCondition struct {
 	Operator string
 }
 
+type ExpressCondition struct {
+	Express  string
+	Target   string
+	Operator string
+}
+
 type Select struct {
 	Fields []string
 	Table  string
 }
 
-func sql(s Select, condition interface{}, regex RegexCondition) string {
+func sql(s Select, condition interface{}, regex RegexCondition, express ExpressCondition) string {
 	sql := strings.Builder{}
 	sql.WriteString(_select(s.Fields))
 	sql.WriteString(_from(s.Table))
-	sql.WriteString(_where(condition, regex))
+	sql.WriteString(_where(condition, regex, express))
 	return sql.String()
 }
 
@@ -39,7 +45,7 @@ func _from(table string) string {
 	return " from " + table
 }
 
-func _where(condition interface{}, regex RegexCondition) string {
+func _where(condition interface{}, regex RegexCondition, express ExpressCondition) string {
 	sql := strings.Builder{}
 	statement := _condition(condition)
 	if len(statement) == 0 {
@@ -47,6 +53,7 @@ func _where(condition interface{}, regex RegexCondition) string {
 	}
 	sql.WriteString(statement)
 	handleReg(regex, &sql)
+	handleExpress(express, &sql)
 	return sql.String()
 }
 
@@ -118,5 +125,21 @@ func handleReg(reg RegexCondition, b *strings.Builder) {
 	}
 	b.WriteString(" '")
 	b.WriteString(reg.Target)
+	b.WriteString("'")
+}
+
+func handleExpress(express ExpressCondition, b *strings.Builder) {
+	if len(express.Express) == 0 {
+		return
+	}
+	b.WriteString(" and ")
+	b.WriteString(express.Express)
+	if len(express.Operator) > 0 {
+		b.WriteString(express.Operator)
+	} else {
+		b.WriteString("=")
+	}
+	b.WriteString(" '")
+	b.WriteString(express.Target)
 	b.WriteString("'")
 }

@@ -1,0 +1,30 @@
+{
+  "select": {
+    "fields": [
+      "count(*)"
+    ],
+    "table": "skynet_all_114133"
+  },
+  "condition": {
+    "appid": "",
+    "logtime": "",
+    "msg": "",
+    "extrainfo": "",
+    "module": "com.ly.train.controller.open",
+    "category": "CommonOpenController",
+    "sub_category": "gtdcClient",
+    "priority": "",
+    "ip": "",
+    "filter1": "",
+    "filter2": "",
+    "contextid": "",
+    "domainname": "",
+    "dt": "20190924",
+    "hour": ""
+  },
+  "expressCondition": {
+    "express": "json_extract_scalar(msg, '$.action')",
+    "target": "inStation_Home_page_into",
+    "operator": "="
+  }
+}
