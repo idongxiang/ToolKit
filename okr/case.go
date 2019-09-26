@@ -123,6 +123,8 @@ func getCasesByConfigDays(file string) []SqlRequest {
 	for i := 0; i < config.Days; i++ {
 		if strings.EqualFold(config.Split, "hour") {
 			splitDayByHours(i, log, dt, request, &requests)
+		} else if strings.EqualFold(config.Split, "minute") {
+			splitDayByMinutes(i, log, dt, request, &requests)
 		} else {
 			requests = append(requests, request)
 		}
@@ -176,5 +178,75 @@ func splitDayByHours(day int, log SkyNetLog, dt time.Time, request SqlRequest, r
 
 		r.RangeCondition = rcs
 		*requests = append(*requests, *r)
+	}
+}
+
+func splitDayByMinutes(day int, log SkyNetLog, dt time.Time, request SqlRequest, requests *[]SqlRequest) {
+	for j := 0; j < 24; j++ {
+		for k := 0; k < 3; k++ {
+			t := &log
+			dt := dt.AddDate(0, 0, -day)
+			t.Dt = dt.Format("20060102")
+			r := &request
+			r.Condition = *t
+
+			var e error
+
+			var lowerHour time.Duration
+			if j != 0 {
+				lowerHour, e = time.ParseDuration(strconv.Itoa(j) + "h")
+				if e != nil {
+					fmt.Println(e)
+					return
+				}
+			}
+
+			var lowerMinutes time.Duration
+			if k != 0 {
+				lowerMinutes, e = time.ParseDuration(strconv.Itoa(k*20) + "m")
+				if e != nil {
+					fmt.Println(e)
+					return
+				}
+			}
+
+			upperHour, e := time.ParseDuration(strconv.Itoa(j) + "h")
+			if e != nil {
+				fmt.Println(e)
+				return
+			}
+
+			upperMinutes, e := time.ParseDuration(strconv.Itoa(k*20+20) + "m")
+			if e != nil {
+				fmt.Println(e)
+				return
+			}
+
+			var lowerLogTime string
+			if j == 0 {
+				if k == 0 {
+					lowerLogTime = dt.Format(GolangTime)
+				} else {
+					lowerLogTime = dt.Add(lowerMinutes).Format(GolangTime)
+				}
+			} else {
+				lowerLogTime = dt.Add(lowerHour).Add(lowerMinutes).Format(GolangTime)
+			}
+			lower := RangeCondition{}
+			lower.Field = LogTime
+			lower.Operator = ">="
+			lower.Target = lowerLogTime
+
+			upperLogTime := dt.Add(upperHour).Add(upperMinutes).Format(GolangTime)
+			upper := RangeCondition{}
+			upper.Field = LogTime
+			upper.Operator = "<"
+			upper.Target = upperLogTime
+
+			rcs := []RangeCondition{lower, upper}
+
+			r.RangeCondition = rcs
+			*requests = append(*requests, *r)
+		}
 	}
 }
