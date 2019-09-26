@@ -22,6 +22,8 @@ type OkrConfig struct {
 		Url            string
 		Authentication string
 	}
+	Days  int
+	Split string
 }
 
 var application Application

@@ -4,7 +4,7 @@ const CasePath string = "okr/case/"
 
 func main() {
 	//doRealChCase(CasePath)
-	doLatestWeekCase(config.Case)
+	doCaseByConfigDays(config.Case)
 }
 
 func _test() {

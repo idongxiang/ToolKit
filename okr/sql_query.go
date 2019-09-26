@@ -17,7 +17,7 @@ type SqlRequest struct {
 	Select           Select
 	Condition        interface{}
 	RegexCondition   RegexCondition
-	ExpressCondition ExpressCondition
+	ExpressCondition []ExpressCondition
 	RangeCondition   []RangeCondition
 }
 

@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"strings"
 	"time"
 )
 
-func doLatestWeekCase(path string) {
+func doCaseByConfigDays(path string) {
 	files, e := ioutil.ReadDir(path)
 	if e != nil {
 		fmt.Println(e)
@@ -29,7 +30,7 @@ func doLatestWeekCase(path string) {
 	}
 
 	for _, c := range cases {
-		requests := getLatestWeekCase(path + c)
+		requests := getCasesByConfigDays(path + c)
 		for _, r := range requests {
 			doSqlQuery(r)
 		}
@@ -98,7 +99,7 @@ func getCase(file string) *SqlRequest {
 	return &request
 }
 
-func getLatestWeekCase(file string) []SqlRequest {
+func getConfigDaysCase(file string) []SqlRequest {
 	request := *getCase(file)
 	log := request.Condition.(SkyNetLog)
 
@@ -109,7 +110,7 @@ func getLatestWeekCase(file string) []SqlRequest {
 	}
 
 	var requests []SqlRequest
-	for i := 0; i < 7; i++ {
+	for i := 0; i < config.Days; i++ {
 		for j := 0; j < 24; j++ {
 			t := &log
 			dt := dt.AddDate(0, 0, -i)
@@ -157,4 +158,74 @@ func getLatestWeekCase(file string) []SqlRequest {
 	}
 
 	return requests
+}
+
+func getCasesByConfigDays(file string) []SqlRequest {
+	request := *getCase(file)
+	log := request.Condition.(SkyNetLog)
+
+	dt, e := time.ParseInLocation("20060102", log.Dt, time.Local)
+	if e != nil {
+		fmt.Println(e)
+		return nil
+	}
+
+	var requests []SqlRequest
+	for i := 0; i < config.Days; i++ {
+		if strings.EqualFold(config.Split, "hour") {
+			splitDayByHours(i, log, dt, request, &requests)
+		} else {
+			requests = append(requests, request)
+		}
+	}
+
+	return requests
+}
+
+func splitDayByHours(day int, log SkyNetLog, dt time.Time, request SqlRequest, requests *[]SqlRequest) {
+	for j := 0; j < 24; j++ {
+		t := &log
+		dt := dt.AddDate(0, 0, -day)
+		t.Dt = dt.Format("20060102")
+		r := &request
+		r.Condition = *t
+
+		var lowerHour time.Duration
+		var e error
+		if j != 0 {
+			lowerHour, e = time.ParseDuration(strconv.Itoa(j) + "h")
+			if e != nil {
+				fmt.Println(e)
+				return
+			}
+		}
+
+		upperHour, e := time.ParseDuration(strconv.Itoa(j+1) + "h")
+		if e != nil {
+			fmt.Println(e)
+			return
+		}
+
+		var lowerLogTime string
+		if j == 0 {
+			lowerLogTime = dt.Format("2006-01-02 15:04:05")
+		} else {
+			lowerLogTime = dt.Add(lowerHour).Format("2006-01-02 15:04:05")
+		}
+		lower := RangeCondition{}
+		lower.Field = LogTime
+		lower.Operator = ">="
+		lower.Target = lowerLogTime
+
+		upperLogTime := dt.Add(upperHour).Format("2006-01-02 15:04:05")
+		upper := RangeCondition{}
+		upper.Field = LogTime
+		upper.Operator = "<"
+		upper.Target = upperLogTime
+
+		rcs := []RangeCondition{lower, upper}
+
+		r.RangeCondition = rcs
+		*requests = append(*requests, *r)
+	}
 }

@@ -1,4 +1,8 @@
 sql:
   url: "http://query"
   authentication: ""
+# 案例路径
 case: "case/"
+# 案例往前查询天数
+days: 1
+split: "hour"
