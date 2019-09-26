@@ -16,6 +16,7 @@ type QueryResult struct {
 type Result struct {
 	Headers []string        `json:"headers"`
 	Results [][]interface{} `json:"results"`
+	Error   string          `json:"error"`
 }
 
 func mergeCountResults(results map[string][]string) {
@@ -31,7 +32,12 @@ func mergeCountResults(results map[string][]string) {
 
 			if qr.Code != 200 {
 				fmt.Println("响应错误:" + ",r=" + r)
-				return
+				continue
+			}
+
+			if len(qr.Result.Error) != 0 {
+				fmt.Println("响应错误:2,r=" + r)
+				continue
 			}
 
 			if len(qr.Result.Results) > 1 {
@@ -42,6 +48,7 @@ func mergeCountResults(results map[string][]string) {
 				fmt.Println("响应结果错误2,r=" + r)
 				return
 			}
+
 			_, ok := qr.Result.Results[0][0].(float64)
 			if ok {
 				count += int(qr.Result.Results[0][0].(float64))
