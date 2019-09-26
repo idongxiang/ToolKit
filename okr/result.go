@@ -26,7 +26,7 @@ func mergeCountResults(results map[string][]string) {
 			qr := QueryResult{}
 			e := json.Unmarshal([]byte(r), &qr)
 			if e != nil {
-				fmt.Println("结果合并错误:" + e.Error() + ",r=" + r)
+				fmt.Println("服务器错误:" + e.Error() + ",r=" + r)
 				return
 			}
 
