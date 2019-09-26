@@ -10,6 +10,7 @@ type QueryResult struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 	Result  Result `json:"result"`
+	Data    string `json:"data"`
 }
 
 type Result struct {
@@ -27,6 +28,12 @@ func mergeCountResults(results map[string][]string) {
 				fmt.Println("结果合并错误:" + e.Error() + ",r=" + r)
 				return
 			}
+
+			if qr.Code != 200 {
+				fmt.Println("响应错误:" + ",r=" + r)
+				return
+			}
+
 			if len(qr.Result.Results) > 1 {
 				fmt.Println("响应结果错误1,r=" + r)
 				return
