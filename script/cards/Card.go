@@ -64,7 +64,6 @@ func sendCard(unionId string, openId string) {
 		return
 	}
 	result, err := doPostQuery(string(bytes))
-	fmt.Println(result)
 	if err != nil {
 		fmt.Println(err)
 		appendError(unionId, openId, err.Error())
