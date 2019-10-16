@@ -1,0 +1,38 @@
+Request URL: http://wx.17u.cn/michelinapi/backend/wechatcoupon/cardadd
+Request Method: POST
+
+Authorization: cb87974b93c9fa5969766c6eea85bec7
+Content-Type: application/json;charset=UTF-8
+
+{
+    "openId":"oOCyauOtuMtjb7z1N429HowSla0I",
+    "unionId":" ohmdTt0aD8YjqqtI3lb6gV7OFZ2E",
+    "activityId":48,
+    "sourceValue":"测试",
+    "source":7,
+    "operator":"董翔(48176)"
+}
+
+{
+  "code": "0000",
+  "message": "请求成功",
+  "serverTime": 1571213328288,
+  "result": {
+    "status": 200,
+    "message": "发券成功",
+    "items": [
+      {
+        "activityName": "【测试专用】无期限",
+        "cardCode": "wd5da6d01020149f0d5b",
+        "title": "测试专用",
+        "leastCost": 2,
+        "reduceCost": 1,
+        "receiveTime": "2019-10-16 16:08:44.137",
+        "expiredTime": "2019-11-14 23:59:59.000",
+        "cardType": 1,
+        "cardId": "pOCyauOMy3VQK_VABtd7mLNApWQ8"
+      }
+    ]
+  },
+  "logId": "a18f4496-90a1-457a-a280-c1449d0a8536"
+}
