@@ -7,22 +7,18 @@ import (
 	"strings"
 )
 
-func doPostQuery(requestBody string) string {
+func doPostQuery(requestBody string) (string, error) {
 	fmt.Println(config.Url)
 	req, e := http.NewRequest(http.MethodPost, config.Url, strings.NewReader(requestBody))
 	if e != nil {
-		fmt.Println(e.Error())
-		return ""
+		return "", e
 	}
-
 	req.Header.Set("Content-Type", "application/json;charset=UTF-8")
-	req.Header.Add("Authentication", config.Authentication)
-
+	req.Header.Add("Authorization", config.Authentication)
 	client := &http.Client{}
 	res, e := client.Do(req)
 	if e != nil {
-		fmt.Println(e.Error())
-		return ""
+		return "", e
 	}
 
 	defer res.Body.Close()
@@ -30,9 +26,8 @@ func doPostQuery(requestBody string) string {
 
 	if e != nil {
 		fmt.Println(e.Error())
-		return ""
+		return "", e
 	}
 
-	return string(body)
+	return string(body), nil
 }
-
