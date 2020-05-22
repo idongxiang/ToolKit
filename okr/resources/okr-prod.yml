@@ -1,8 +1,9 @@
 sql:
-  url: "http://query"
-  authentication: ""
-# 案例路径
-case: "case/"
+  url: "http://skynet.dss.xxx.com/skynetapi/api/sql/query"
+  authentication: "3e32ac7d5225760f5c06"
+# 案例路径.路径要加上main所在目录
+case: "okr/case/monitor/"
 # 案例往前查询天数
 days: 1
-split: "hour"
+# support: hour、minute、empty
+split: ""
