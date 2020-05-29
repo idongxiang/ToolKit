@@ -1,5 +1,10 @@
 # Self
 .idea/*
+okr/resources/okr-dev.yml
+script/cards/resources/card-dev.yml
+script/cards/resources/data.csv
+script/cards/resources/doc.txt
+script/cards/resources/fail.log
 
 # Binaries for programs and plugins
 *.exe

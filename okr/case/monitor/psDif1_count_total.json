@@ -1,0 +1,29 @@
+{
+  "select": {
+    "fields": [
+      "count(*)"
+    ],
+    "table": "skynet_all_109707"
+  },
+  "condition": {
+    "appid": "",
+    "logtime": "",
+    "msg": "",
+    "extrainfo": "",
+    "module": "com.ly.train.cache.impl.supplier.kyfw",
+    "category": "AsyncServiceImpl",
+    "sub_category": "",
+    "priority": "",
+    "ip": "",
+    "filter1": "psDif1",
+    "filter2": "",
+    "contextid": "",
+    "domainname": "",
+    "dt": "20200521",
+    "hour": ""
+  },
+  "regexCondition": {
+    "regex": "",
+    "target": ""
+  }
+}

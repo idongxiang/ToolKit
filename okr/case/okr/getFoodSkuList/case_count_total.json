@@ -1,0 +1,29 @@
+{
+  "select": {
+    "fields": [
+      "count(*)"
+    ],
+    "table": "skynet_all_101312"
+  },
+  "condition": {
+    "appid": "",
+    "logtime": "",
+    "msg": "",
+    "extrainfo": "",
+    "module": "com.ly.train.controller.valueadded",
+    "category": "ValueAddedController",
+    "sub_category": "getFoodSkuList",
+    "priority": "",
+    "ip": "",
+    "filter1": "REQUEST",
+    "filter2": "",
+    "contextid": "",
+    "domainname": "",
+    "dt": "20190925",
+    "hour": ""
+  },
+  "regexCondition": {
+    "regex": "",
+    "target": ""
+  }
+}

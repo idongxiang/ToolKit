@@ -1,0 +1,30 @@
+{
+  "select": {
+    "fields": [
+      "count(*)"
+    ],
+    "table": "skynet_all_101312"
+  },
+  "condition": {
+    "appid": "",
+    "logtime": "",
+    "msg": "",
+    "extrainfo": "",
+    "module": "com.ly.train.third.service.kyfw12306.core",
+    "category": "ApiManager",
+    "sub_category": "",
+    "priority": "",
+    "ip": "",
+    "filter1": "getStationList",
+    "filter2": "",
+    "contextid": "",
+    "domainname": "",
+    "dt": "20190919",
+    "hour": ""
+  },
+  "regexCondition": {
+    "regex": "code\\\": \"([-\\d]+)\\\"",
+    "target": "0",
+    "operator": "="
+  }
+}
